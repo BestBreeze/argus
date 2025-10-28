@@ -1,0 +1,41 @@
+{
+  "CWE-502": {
+    "name": "Deserialization of Untrusted Data (Log4Shell-like)",
+    "languages": ["java"],
+    "severity": "ERROR",
+    "mode": "taint",
+    "pattern-sources": [
+      "javax.servlet.http.HttpServletRequest.getParameter(...)",
+      "javax.servlet.http.HttpServletRequest.getHeader(...)",
+      "org.springframework.web.bind.annotation.RequestParam"
+    ],
+    "pattern-sinks": [
+      "org.apache.logging.log4j.Logger.error(...)",
+      "org.apache.logging.log4j.Logger.warn(...)",
+      "org.apache.logging.log4j.Logger.info(...)",
+      "org.apache.logging.log4j.Logger.fatal(...)",
+      "org.apache.logging.log4j.Logger.trace(...)",
+      "org.apache.logging.log4j.Logger.debug(...)"
+    ],
+    "message": "Potential Log4Shell vulnerability: Untrusted input flows into a Log4j logging method."
+  },
+  "CWE-89": {
+    "name": "SQL Injection",
+    "languages": ["java"],
+    "severity": "ERROR",
+    "mode": "taint",
+    "pattern-sources": [
+      "javax.servlet.http.HttpServletRequest.getParameter(...)",
+      "org.springframework.web.bind.annotation.RequestParam"
+    ],
+    "pattern-sinks": [
+      "java.sql.Statement.executeQuery(...)",
+      "java.sql.Connection.prepareStatement(...)",
+      "org.springframework.jdbc.core.JdbcTemplate.query(...)"
+    ],
+    "pattern-sanitizers": [
+      "org.owasp.encoder.Encode.forSql(...)"
+    ],
+    "message": "Potential SQL Injection: Untrusted input flows into a SQL query."
+  }
+}

@@ -1,0 +1,74 @@
+:root {
+  --bg-color: #1b2636;
+  --fg-color: #f0f0f0;
+  --primary-color: #3498db;
+  --border-color: #445566;
+}
+body {
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+#project-path {
+  flex-grow: 1;
+  padding: 10px;
+  background-color: #2c3e50;
+  border: 1px solid var(--border-color);
+  color: var(--fg-color);
+  border-radius: 4px;
+}
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+button:hover { background-color: #4aa9e8; }
+button:disabled { background-color: #556677; cursor: not-allowed; }
+#log-container {
+  flex-grow: 1;
+  background-color: #111821;
+  border: 1px solid var(--border-color);
+  padding: 15px;
+  overflow-y: auto;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9em;
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+#result-link {
+  margin-top: 15px;
+  text-align: center;
+}
+#result-link {
+    margin-top: 20px; /* 稍微增加一点上边距 */
+    text-align: center;
+}
+
+#report-btn {
+    background-color: #27ae60; /* 使用绿色表示成功 */
+    font-size: 1.1em;
+    padding: 12px 25px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+#report-btn:hover {
+    background-color: #2ecc71;
+}

@@ -1,368 +1,98 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Argus 安全扫描报告</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        h1, h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        .summary { background-color: #ecf0f1; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-        .card { border: 1px solid #ddd; border-radius: 5px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .card-header { background-color: #f2f2f2; padding: 15px; font-weight: bold; font-size: 1.2em; border-bottom: 1px solid #ddd; }
-        .card-body { padding: 15px; }
-        .vuln-item { border-bottom: 1px dashed #ccc; padding: 10px 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 0 auto; padding: 20px; background-color: #f8f9fa; }
+        h1, h2, h3 { color: #2c3e50; }
+		h1 { border-bottom: 3px solid #3498db; }
+		h2 { border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 40px; }
+        .summary { background-color: #ffffff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); background-color: #fff; overflow: hidden; }
+        .card-header { background-color: #f7f7f7; padding: 15px 20px; font-weight: bold; font-size: 1.2em; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
+		.card-header.vuln-header { background-color: #fbeae5; }
+		.card-header.vcsa-header { background-color: #d4e6f1; }
+        .card-body { padding: 20px; }
+        .vuln-item { border-bottom: 1px dashed #eee; padding: 15px 0; }
         .vuln-item:last-child { border-bottom: none; }
         .vuln-id { font-weight: bold; color: #c0392b; }
-        .ecosystem { background-color: #3498db; color: white; padding: 3px 8px; border-radius: 3px; font-size: 0.9em; }
+        .tag { color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.9em; }
+        .tag-ecosystem { background-color: #3498db; }
+		.tag-cwe { background-color: #9b59b6; }
+        pre { background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: "Courier New", Courier, monospace; }
+		code { font-family: "Courier New", Courier, monospace; }
     </style>
 </head>
 <body>
-    <h1><span class="ecosystem">Argus</span> 安全扫描报告</h1>
+    <h1><span class="tag tag-ecosystem">Argus</span> 安全扫描报告</h1>
     <div class="summary">
-        <p><strong>扫描时间:</strong> Tue, 28 Oct 2025 19:43:43 CST</p>
-        <p><strong>发现漏洞的依赖项数量:</strong> 3</p>
+        <h3>扫描摘要</h3>
+        <p><strong>扫描时间:</strong> Wed, 29 Oct 2025 15:54:17 CST</p>
+        <p><strong>共扫描文件:</strong> 1</p>
+        <p><strong>发现漏洞的依赖项:</strong> 1 个</p>
+        <p><strong>总计依赖漏洞 (SCA):</strong> 4 个</p>
+        <p><strong>代码中的潜在利用点 (VCSA):</strong> 1 个</p>
     </div>
 
     
+    <h2><span style="color: #c0392b;">🔴</span> 代码安全审计 (VCSA) 结果</h2>
+    <p>以下是在代码中发现的、与依赖漏洞相关的潜在利用点，请优先关注：</p>
+    
     <div class="card">
-        <div class="card-header">
-            <span class="ecosystem">PyPI</span> django @ 3.2
+        <div class="card-header vcsa-header">
+            <span>..\JavaTestProject\src\main\java\com\vulnerable\VulnerableServlet.java:19</span>
+			<span class="tag tag-cwe">CWE-502</span>
         </div>
         <div class="card-body">
-            <p><strong>发现于:</strong> requirements.txt</p>
-            <h4>发现 53 个漏洞:</h4>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-2gwj-7jmv-h26r</span> (BIT-django-2022-28346 CVE-2022-28346 PYSEC-2022-190 )</p>
-                <p><strong>摘要:</strong> SQL Injection in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-2hrw-hx67-34x6</span> (BIT-django-2023-24580 CVE-2023-24580 PYSEC-2023-13 )</p>
-                <p><strong>摘要:</strong> Resource exhaustion in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-53qw-q765-4fww</span> (BIT-django-2021-45115 CVE-2021-45115 PYSEC-2022-1 )</p>
-                <p><strong>摘要:</strong> Denial-of-service in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-68w8-qjq3-2gfm</span> (BIT-django-2021-33203 CVE-2021-33203 PYSEC-2021-98 )</p>
-                <p><strong>摘要:</strong> Path Traversal in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-6cw3-g6wv-c2xv</span> (BIT-django-2022-23833 CVE-2022-23833 PYSEC-2022-20 )</p>
-                <p><strong>摘要:</strong> Infinite Loop in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-6w2r-r2m5-xq5w</span> (BIT-django-2025-57833 CVE-2025-57833 )</p>
-                <p><strong>摘要:</strong> Django is subject to SQL injection through its column aliases</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-7h4p-27mh-hmrw</span> (BIT-django-2023-41164 CVE-2023-41164 PYSEC-2023-225 )</p>
-                <p><strong>摘要:</strong> Django Denial of service vulnerability in django.utils.encoding.uri_to_iri</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-7xr5-9hcq-chf9</span> (BIT-django-2025-48432 CVE-2025-48432 PYSEC-2025-47 )</p>
-                <p><strong>摘要:</strong> Django Improper Output Neutralization for Logs vulnerability</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-8c5j-9r9f-c6w8</span> (BIT-django-2021-45116 CVE-2021-45116 PYSEC-2022-2 )</p>
-                <p><strong>摘要:</strong> Information disclosure in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-8x94-hmjh-97hq</span> (BIT-django-2022-36359 CVE-2022-36359 PYSEC-2022-245 )</p>
-                <p><strong>摘要:</strong> Django vulnerable to Reflected File Download attack</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-95rw-fx8r-36v6</span> (BIT-django-2022-22818 CVE-2022-22818 PYSEC-2022-19 )</p>
-                <p><strong>摘要:</strong> Cross-site Scripting in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-h8gc-pgj2-vjm3</span> (BIT-django-2023-43665 CVE-2023-43665 PYSEC-2023-226 )</p>
-                <p><strong>摘要:</strong> Django Denial-of-service in django.utils.text.Truncator</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-jh3w-4vvf-mjgr</span> (BIT-django-2023-36053 CVE-2023-36053 PYSEC-2023-100 )</p>
-                <p><strong>摘要:</strong> Django has regular expression denial of service vulnerability in EmailValidator/URLValidator</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-jrh2-hc4r-7jwx</span> (BIT-django-2021-45452 CVE-2021-45452 PYSEC-2022-3 )</p>
-                <p><strong>摘要:</strong> Directory-traversal in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-p64x-8rxx-wf6q</span> (BIT-django-2022-34265 CVE-2022-34265 PYSEC-2022-213 )</p>
-                <p><strong>摘要:</strong> Django `Trunc()` and `Extract()` database functions vulnerable to SQL Injection</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-p99v-5w3c-jqq9</span> (BIT-django-2021-33571 CVE-2021-33571 PYSEC-2021-99 )</p>
-                <p><strong>摘要:</strong> Django Access Control Bypass possibly leading to SSRF, RFI, and LFI attacks </p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-q2jf-h9jm-m7p4</span> (BIT-django-2023-23969 CVE-2023-23969 PYSEC-2023-12 )</p>
-                <p><strong>摘要:</strong> Django contains Uncontrolled Resource Consumption via cached header</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-qm57-vhq3-3fwf</span> (BIT-django-2021-32052 CVE-2021-32052 PYSEC-2021-8 )</p>
-                <p><strong>摘要:</strong> Header injection possible in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-qmf9-6jqf-j8fq</span> (BIT-django-2023-46695 CVE-2023-46695 PYSEC-2023-222 )</p>
-                <p><strong>摘要:</strong> Django potential denial of service vulnerability in UsernameField on Windows</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-qrw5-5h28-6cmg</span> (BIT-django-2022-41323 CVE-2022-41323 PYSEC-2022-304 )</p>
-                <p><strong>摘要:</strong> Django denial-of-service vulnerability in internationalized URLs</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-r3xc-prgr-mg9p</span> (BIT-django-2023-31047 CVE-2023-31047 PYSEC-2023-61 )</p>
-                <p><strong>摘要:</strong> Django bypasses validation when using one form field to upload multiple files</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-rrqc-c2jx-6jgv</span> (BIT-django-2024-45231 CVE-2024-45231 )</p>
-                <p><strong>摘要:</strong> Django allows enumeration of user e-mail addresses</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-rxjp-mfm9-w4wr</span> (BIT-django-2021-31542 CVE-2021-31542 PYSEC-2021-7 )</p>
-                <p><strong>摘要:</strong> Path Traversal in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-v6rh-hp5x-86rv</span> (BIT-django-2021-44420 CVE-2021-44420 PYSEC-2021-439 )</p>
-                <p><strong>摘要:</strong> Potential bypass of an upstream access control based on URL paths in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-vm8q-m57g-pff3</span> (BIT-django-2024-27351 CVE-2024-27351 PYSEC-2024-47 )</p>
-                <p><strong>摘要:</strong> Regular expression denial-of-service in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-w24h-v9qh-8gxj</span> (BIT-django-2022-28347 CVE-2022-28347 PYSEC-2022-191 )</p>
-                <p><strong>摘要:</strong> SQL Injection in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-xpfp-f569-q3p2</span> (BIT-django-2021-35042 CVE-2021-35042 PYSEC-2021-109 )</p>
-                <p><strong>摘要:</strong> SQL Injection in Django</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-xxj9-f6rv-m3x4</span> (BIT-django-2024-24680 CVE-2024-24680 PYSEC-2024-28 )</p>
-                <p><strong>摘要:</strong> Django denial-of-service attack in the intcomma template filter</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2021-109</span> (BIT-django-2021-35042 CVE-2021-35042 GHSA-xpfp-f569-q3p2 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2021-439</span> (BIT-django-2021-44420 CVE-2021-44420 GHSA-v6rh-hp5x-86rv )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2021-7</span> (BIT-django-2021-31542 CVE-2021-31542 GHSA-rxjp-mfm9-w4wr )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2021-8</span> (BIT-django-2021-32052 CVE-2021-32052 GHSA-qm57-vhq3-3fwf )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2021-98</span> (BIT-django-2021-33203 CVE-2021-33203 GHSA-68w8-qjq3-2gfm )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2021-99</span> (BIT-django-2021-33571 CVE-2021-33571 GHSA-p99v-5w3c-jqq9 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-1</span> (BIT-django-2021-45115 CVE-2021-45115 GHSA-53qw-q765-4fww )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-19</span> (BIT-django-2022-22818 CVE-2022-22818 GHSA-95rw-fx8r-36v6 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-190</span> (BIT-django-2022-28346 CVE-2022-28346 GHSA-2gwj-7jmv-h26r )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-191</span> (BIT-django-2022-28347 CVE-2022-28347 GHSA-w24h-v9qh-8gxj )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-2</span> (BIT-django-2021-45116 CVE-2021-45116 GHSA-8c5j-9r9f-c6w8 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-20</span> (BIT-django-2022-23833 CVE-2022-23833 GHSA-6cw3-g6wv-c2xv )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-213</span> (BIT-django-2022-34265 CVE-2022-34265 GHSA-p64x-8rxx-wf6q )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-245</span> (BIT-django-2022-36359 CVE-2022-36359 GHSA-8x94-hmjh-97hq )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-3</span> (BIT-django-2021-45452 CVE-2021-45452 GHSA-jrh2-hc4r-7jwx )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2022-304</span> (BIT-django-2022-41323 CVE-2022-41323 GHSA-qrw5-5h28-6cmg )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-100</span> (BIT-django-2023-36053 CVE-2023-36053 GHSA-jh3w-4vvf-mjgr )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-12</span> (BIT-django-2023-23969 CVE-2023-23969 GHSA-q2jf-h9jm-m7p4 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-13</span> (BIT-django-2023-24580 CVE-2023-24580 GHSA-2hrw-hx67-34x6 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-222</span> (BIT-django-2023-46695 CVE-2023-46695 GHSA-qmf9-6jqf-j8fq )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-225</span> (BIT-django-2023-41164 CVE-2023-41164 GHSA-7h4p-27mh-hmrw )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-226</span> (BIT-django-2023-43665 CVE-2023-43665 GHSA-h8gc-pgj2-vjm3 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-61</span> (BIT-django-2023-31047 CVE-2023-31047 GHSA-r3xc-prgr-mg9p )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2024-28</span> (BIT-django-2024-24680 CVE-2024-24680 GHSA-xxj9-f6rv-m3x4 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2024-47</span> (BIT-django-2024-27351 CVE-2024-27351 GHSA-vm8q-m57g-pff3 )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
+            <p><strong>描述:</strong> [VCSA] 发现一个由高危依赖漏洞(CWE-502)触发的潜在命令注入点。请人工审计，确认是否有用户输入被拼接到了命令中。</p>
+            <p><strong>代码片段:</strong></p>
+            <pre><code>Process process = Runtime.getRuntime().exec(&#34;ping &#34; &#43; command);</code></pre>
         </div>
     </div>
     
+    
+
+    <h2><span style="color: #f39c12;">🟡</span> 依赖安全扫描 (SCA) 结果</h2>
+    
     <div class="card">
-        <div class="card-header">
-            <span class="ecosystem">Maven</span> org.apache.logging.log4j:log4j-core @ 2.14.1
+        <div class="card-header vuln-header">
+            <span>org.apache.logging.log4j:log4j-core @ 2.14.1</span>
+			<span class="tag tag-ecosystem">Maven</span>
         </div>
         <div class="card-body">
-            <p><strong>发现于:</strong> pom.xml</p>
+            <p><strong>发现于:</strong> <code>..\JavaTestProject\pom.xml</code></p>
             <h4>发现 4 个漏洞:</h4>
             
             <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-7rjr-3q55-vv33</span> (CVE-2021-45046 )</p>
+                <p><span class="vuln-id">GHSA-7rjr-3q55-vv33</span> (CVE-2021-45046) </p>
                 <p><strong>摘要:</strong> Incomplete fix for Apache Log4j vulnerability</p>
+				<p><strong>漏洞类型 (CWE):</strong> <span class="tag tag-cwe">CWE-502</span> <span class="tag tag-cwe">CWE-917</span> </p>
             </div>
             
             <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-8489-44mv-ggj8</span> (CVE-2021-44832 )</p>
+                <p><span class="vuln-id">GHSA-8489-44mv-ggj8</span> (CVE-2021-44832) </p>
                 <p><strong>摘要:</strong> Improper Input Validation and Injection in Apache Log4j2</p>
+				<p><strong>漏洞类型 (CWE):</strong> <span class="tag tag-cwe">CWE-20</span> <span class="tag tag-cwe">CWE-74</span> </p>
             </div>
             
             <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-jfh8-c2jp-5v3q</span> (CVE-2021-44228 )</p>
+                <p><span class="vuln-id">GHSA-jfh8-c2jp-5v3q</span> (CVE-2021-44228) </p>
                 <p><strong>摘要:</strong> Remote code injection in Log4j</p>
+				<p><strong>漏洞类型 (CWE):</strong> <span class="tag tag-cwe">CWE-20</span> <span class="tag tag-cwe">CWE-400</span> <span class="tag tag-cwe">CWE-502</span> <span class="tag tag-cwe">CWE-917</span> </p>
             </div>
             
             <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-p6xc-xr62-6r2g</span> (CVE-2021-45105 )</p>
+                <p><span class="vuln-id">GHSA-p6xc-xr62-6r2g</span> (CVE-2021-45105) </p>
                 <p><strong>摘要:</strong> Apache Log4j2 vulnerable to Improper Input Validation and Uncontrolled Recursion</p>
+				<p><strong>漏洞类型 (CWE):</strong> <span class="tag tag-cwe">CWE-20</span> <span class="tag tag-cwe">CWE-674</span> </p>
             </div>
             
         </div>
     </div>
     
-    <div class="card">
-        <div class="card-header">
-            <span class="ecosystem">PyPI</span> requests @ 2.25.0
-        </div>
-        <div class="card-body">
-            <p><strong>发现于:</strong> requirements.txt</p>
-            <h4>发现 4 个漏洞:</h4>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-9hjg-9r4m-mvj7</span> (CVE-2024-47081 )</p>
-                <p><strong>摘要:</strong> Requests vulnerable to .netrc credentials leak via malicious URLs</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-9wx4-h78v-vm56</span> (CVE-2024-35195 )</p>
-                <p><strong>摘要:</strong> Requests `Session` object does not verify requests after making first request with verify=False</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">GHSA-j8r2-6x86-q33q</span> (CVE-2023-32681 PYSEC-2023-74 )</p>
-                <p><strong>摘要:</strong> Unintended leak of Proxy-Authorization header in requests</p>
-            </div>
-            
-            <div class="vuln-item">
-                <p><span class="vuln-id">PYSEC-2023-74</span> (CVE-2023-32681 GHSA-j8r2-6x86-q33q )</p>
-                <p><strong>摘要:</strong> (无可用摘要)</p>
-            </div>
-            
-        </div>
-    </div>
-    
+
 </body>
 </html>

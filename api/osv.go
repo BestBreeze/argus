@@ -10,22 +10,23 @@ type OSVResponse struct {
 
 // Vulnerability 对应单个漏洞的详细信息
 type Vulnerability struct {
-	ID         string       `json:"id"`
-	Summary    string       `json:"summary"`
-	Details    string       `json:"details"`
-	Aliases    []string     `json:"aliases"`
-	Modified   time.Time    `json:"modified"`
-	Published  time.Time    `json:"published"`
-	Affected   []Affected   `json:"affected"`
-	Severity   []Severity   `json:"severity"`
-	References []Reference  `json:"references"`
+	ID               string                 `json:"id"`
+	Summary          string                 `json:"summary"`
+	Details          string                 `json:"details"`
+	Aliases          []string               `json:"aliases"`
+	Modified         time.Time              `json:"modified"`
+	Published        time.Time              `json:"published"`
+	Affected         []Affected             `json:"affected"`
+	Severity         []Severity             `json:"severity"`
+	References       []Reference            `json:"references"`
 	DatabaseSpecific map[string]interface{} `json:"database_specific"`
+	CWEs             []string               `json:"-"` // 必须换行
 }
 
 // Affected 描述受影响的包和版本范围
 type Affected struct {
-	Package Package  `json:"package"`
-	Ranges  []Range  `json:"ranges"`
+	Package  Package  `json:"package"`
+	Ranges   []Range  `json:"ranges"`
 	Versions []string `json:"versions"`
 }
 

@@ -1,114 +1,74 @@
-// main.go
+// main.go (第八周最终版)
 package main
 
 import (
-	"flag" // 导入 flag 包
+	"flag"
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"argus/analyzer"
 	"argus/parser"
+	"argus/preprocessor"
 	"argus/reporter"
-	"argus/vcsa" // 导入 vcsa 包
 )
 
 func main() {
-	// --- 新增：定义命令行参数 ---
-	// 定义一个名为 "-mode" 的参数，默认值为 "sca"
-	// 用法: go run main.go -mode=vcsa
-	mode := flag.String("mode", "sca", "扫描模式: 'sca' (依赖扫描) 或 'vcsa' (漏洞关联静态分析)")
-	// 定义一个 -cwe 参数，用于 vcsa 模式
-	cwe := flag.String("cwe", "CWE-502", "在 VCSA 模式下要扫描的 CWE 编号")
-
-	// 解析用户传入的命令行参数
+	// 定义命令行参数
+	input := flag.String("path", ".", "要扫描的项目文件夹或压缩包路径")
+	output := flag.String("output", "argus_report.html", "输出报告的文件名")
 	flag.Parse()
 
-	fmt.Printf("百眼巨人(Argus)安全引擎启动... [模式: %s]\n", *mode)
+	fmt.Printf("百眼巨人(Argus)安全引擎启动... 目标: %s\n", *input)
 
-	// --- 根据模式选择执行不同的逻辑 ---
-	if *mode == "sca" {
-		runSCAScan()
-	} else if *mode == "vcsa" {
-		runVCSAScan(*cwe)
-	} else {
-		log.Fatalf("错误: 未知的模式 '%s'. 请使用 'sca' 或 'vcsa'.", *mode)
+	// --- 阶段0: 输入预处理 ---
+	scanPath, cleanup, err := preprocessor.ProcessInput(*input)
+	if err != nil {
+		log.Fatalf("输入处理失败: %v", err)
 	}
-}
+	defer cleanup() // 确保程序退出时清理临时文件
 
-// runSCAScan 函数包含了我们之前所有的SCA逻辑
-func runSCAScan() {
-	fmt.Println("--- 阶段1: 解析 ---")
-	targetFiles := []string{"requirements.txt", "pom.xml"}
+	// --- 阶段1: 解析依赖文件 (SCA准备) ---
+	fmt.Println("\n--- 阶段1: 解析依赖文件 ---")
 	var allDependencies []parser.Dependency
-	var foundFiles []string
+	var foundDepFiles []string
 
-	for _, file := range targetFiles {
-		if _, err := os.Stat(file); os.IsNotExist(err) {
-			continue
-		}
-
-		p := parser.GetParser(file)
-		if p == nil {
-			continue
-		}
-
-		foundFiles = append(foundFiles, file)
-		deps, err := p.Parse(file)
+	// 遍历扫描目录，寻找所有支持的依赖文件
+	filepath.WalkDir(scanPath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
-			log.Printf("警告: 解析文件 '%s' 失败: %v", file, err)
-			continue
+			return err
 		}
-		allDependencies = append(allDependencies, deps...)
-	}
-	fmt.Printf("解析完成, 共找到 %d 个依赖项。\n", len(allDependencies))
 
-	fmt.Println("--- 阶段2: 分析 ---")
-	fmt.Println("开始并发扫描漏洞...")
-	report := analyzer.AnalyzeDependencies(allDependencies)
-	report.ScannedFiles = foundFiles
-	fmt.Println("漏洞扫描完成。")
+		if !d.IsDir() {
+			p := parser.GetParser(path)
+			if p != nil {
+				fmt.Printf("  [+] 发现依赖文件: %s\n", path)
+				foundDepFiles = append(foundDepFiles, path)
+				deps, err := p.Parse(path)
+				if err != nil {
+					log.Printf("    [!] 解析失败: %v\n", err)
+				} else {
+					allDependencies = append(allDependencies, deps...)
+				}
+			}
+		}
+		return nil
+	})
+	fmt.Printf("解析完成, 在 %d 个文件中找到 %d 个依赖项。\n", len(foundDepFiles), len(allDependencies))
 
-	fmt.Println("--- 阶段3: 报告 ---")
-	reportPath := "argus_report.html"
-	fmt.Printf("正在生成HTML报告: %s\n", reportPath)
-	err := reporter.GenerateHTMLReport(report, reportPath)
+	// --- 阶段2 & 2.5: 分析 (SCA + VCSA联动) ---
+	fmt.Println("\n--- 阶段2: 分析依赖项漏洞与代码关联 ---")
+	report := analyzer.Analyze(allDependencies, scanPath)
+	report.ScannedFiles = foundDepFiles
+
+	// --- 阶段3: 报告 ---
+	fmt.Printf("\n--- 阶段3: 生成报告 ---\n")
+	fmt.Printf("正在生成HTML报告: %s\n", *output)
+	err = reporter.GenerateHTMLReport(report, *output)
 	if err != nil {
 		log.Fatalf("生成报告失败: %v", err)
 	}
 
-	fmt.Println("报告生成成功！")
-}
-
-// runVCSAScan 函数用于执行我们本周开发的VCSA逻辑
-func runVCSAScan(cweID string) {
-	// 1. 初始化引擎
-	engine, err := vcsa.NewEngine("rules/vcsa_rules.json")
-	if err != nil {
-		log.Fatalf("VCSA引擎初始化失败: %v", err)
-	}
-
-	// 2. 定义要扫描的目标目录（就是当前目录）
-	targetDir, _ := os.Getwd()
-
-	// 3. 定义要扫描的漏洞类型 (从参数传入)
-	cwes := []string{cweID}
-
-	fmt.Printf("开始在 %s 中进行VCSA扫描 [CWEs: %v] ...\n", targetDir, cwes)
-	findings, err := engine.Scan(targetDir, cwes)
-	if err != nil {
-		log.Fatalf("VCSA扫描失败: %v", err)
-	}
-
-	fmt.Printf("扫描完成，发现 %d 个潜在利用点:\n", len(findings))
-	if len(findings) > 0 {
-		for _, f := range findings {
-			fmt.Printf("\n========================================\n")
-			fmt.Printf("规则ID: %s\n", f.RuleID)
-			fmt.Printf("文件: %s:%d\n", f.FilePath, f.Line)
-			fmt.Printf("描述: %s\n", f.Message)
-			fmt.Printf("代码片段:\n%s\n", f.CodeSnippet)
-			fmt.Printf("========================================\n")
-		}
-	}
+	fmt.Printf("\n扫描完成！报告已保存至 %s\n", *output)
 }
